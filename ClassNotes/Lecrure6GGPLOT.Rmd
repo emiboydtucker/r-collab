@@ -1,0 +1,59 @@
+---
+title: "Lecture6GGPLOT"
+author: "Emi"
+date: "2026-06-09"
+output: html_document
+---
+
+```{r}
+
+mpg
+
+cars
+
+View(mpg)
+
+head(mpg)
+
+str(mpg)
+
+colnames(mpg)
+
+summary(mpg)
+```
+```{r}
+
+mtcars
+
+View(mtcars)
+
+summary(mtcars)
+
+```
+hey seapartion
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(displ, hwy))
+
+  
+```
+```{r}
+ggplot(data = mpg)
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(class, drv))
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, color = class, size = cyl)) 
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, shape = class, size = cyl, color = class))
+
+```
+
+spacing
+
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy), color = "blue")
+```
