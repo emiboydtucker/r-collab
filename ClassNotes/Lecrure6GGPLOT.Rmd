@@ -57,3 +57,70 @@ spacing
 ggplot(data = mpg) + 
   geom_point(mapping = aes(x = displ, y = hwy), color = "blue")
 ```
+
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, color = class, size = cyl), shape=1) +
+  geom_smooth(mapping = aes(x = displ, y = hwy))
+
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point(mapping = aes(color =class, size = cyl), shape = 1) +
+  geom_smooth()
+
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point(mapping = aes(color = class, size = cyl), shape = 1) +
+  geom_smooth() +
+  facet_wrap(~ year, nrow=1)
+```
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  facet_wrap(~ class, nrow=3)
+```
+```{r, fig.height = 5, fig.width = 8}
+ggplot(data = mpg, mapping = aes(x=displ, y=hwy)) + 
+  geom_point(mapping = aes(color=class, size=cyl), shape=1) +
+  geom_smooth() +
+  facet_wrap(~ year, nrow=1) +
+  theme_bw()
+
+
+ggplot(data = mpg) +
+  geom_boxplot(mapping = aes(x = class, y = hwy))
+
+
+ggplot(mpg) +
+  geom_bar(mapping = aes(x = class))
+
+
+ggplot(mpg, aes(x = displ, y = hwy))+
+  geom_point() +
+  geom_smooth(method = "lm", se = F)
+
+
+ggplot(mpg)+
+  geom_point(aes(x=displ, y=hwy)) +
+  geom_label(data=filter(mpg, hwy>40), mapping = aes(label=model, y=hwy, x=displ+0.8))
+
+
+group_by(mpg, manufacturer, year, class, model) %>%
+  summarize(mean_hwy=mean(hwy)) %>%
+  ggplot(aes(x=year, y=mean_hwy, color=class, group=model)) +
+  geom_point() +
+  geom_line() +
+  facet_wrap(~manufacturer)
+
+
+plot3 <- ggplot(mpg) +
+  geom_density(aes(color=drv, x=hwy))
+
+
+ggplot(mpg) +
+  geom_density(aes(fill=drv, x=hwy), alpha=0.5)
+
+
+ggsave(plot3, file = "~/R Studio/r-collab/ClassNotes/plot3.png")
+
+```
+ggsave()
+
