@@ -4,27 +4,50 @@ author: "Emi"
 date: "2026-06-16"
 output: html_document
 ---
+Here are lecture 7 class notes
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+#filter
+
+```{r}
+
+chum <- read_csv("../20250730_AYKSSI_ASL_chum_export.csv")
+
+head(chum)
+
+tail(chum, 20)
+
+head(chum$ABLG, 30)
+
+filter(chum, FreshwaterWatershed == "Togiak River" | FreshwaterWatershed == "Anvik River")
+
+
+filter(chum, FreshwaterWatershed %in% c("Togiak River", "Anvik River"), DNAngul >= 5)
+
+View(chum)
+
+filter(chum, FreshwaterWatershed == "Anvik River", AgeYRS >= 0, is.na(AgeYRS) == F)
+
+x <- filter(chum, AgeYRS >= 0, is.na(AgeYRS) == F)
+x$AgeYRS
+names(chum)
 ```
 
-## R Markdown
+#select
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+```{r}
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+head(select(chum, c(ABLG, FreshwaterWatershed, ExtractionPlate)),30)
 
-```{r cars}
-summary(cars)
 ```
 
-## Including Plots
+#piping (%>%)
 
-You can also embed plots, for example:
+```{r}
+chum_asl <- chum %>% 
+  filter(DNAngul > 5, is.na(AgeYRS) == F) %>% 
+  select(ABLG, FreshwaterWatershed, AgeYRS, Sex, LengthMM, StartLatitudeDD, StartLongitudeDD) %>%
+   mutate(LengthMM/AgeYRS)
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+View(chum_asl)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
