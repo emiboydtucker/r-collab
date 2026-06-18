@@ -44,7 +44,7 @@ head(select(chum, c(ABLG, FreshwaterWatershed, ExtractionPlate)),30)
 
 ```{r}
 chum_asl <- chum %>% 
-  filter(DNAngul > 5, is.na(AgeYRS) == F) %>% 
+  filter(DNAngul > 5, is.na(AgeYRS)  == F) %>% 
   select(ABLG, FreshwaterWatershed, AgeYRS, Sex, LengthMM, StartLatitudeDD, StartLongitudeDD) %>%
    mutate(LengthMM/AgeYRS)
 
