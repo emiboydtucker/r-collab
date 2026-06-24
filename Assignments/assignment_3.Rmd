@@ -17,7 +17,7 @@ First, we load the data using the following code.
 <br>
 
 ```{r}
-## Write your code here
+economist_data <- read_csv("https://raw.githubusercontent.com/nt246/NTRES6940-data-science/master/datasets/EconomistData.csv")
 ```
 
 <br><br>
@@ -26,7 +26,7 @@ First, we load the data using the following code.
 <br>
 
 ```{r}
-## Write your code here
+head(economist_data)
 ```
 
 <br><br>
