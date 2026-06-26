@@ -1,22 +1,17 @@
 {
-    "id": "AEB8C0FD",
-    "path": "~/R Studio/r-collab/Assignments/assignment_3.Rmd",
-    "project_path": "Assignments/assignment_3.Rmd",
+    "id": "34A50D9C",
+    "path": "~/R Studio/r-collab/Assignments/Assignment3/assignment_3.Rmd",
+    "project_path": "Assignments/Assignment3/assignment_3.Rmd",
     "type": "r_markdown",
     "hash": "0",
     "contents": "",
     "dirty": false,
-    "created": 1782498070289.0,
+    "created": 1782500494941.0,
     "source_on_save": false,
     "relative_order": 9,
     "properties": {
-        "tempName": "Untitled1",
         "source_window_id": "",
-        "Source": "Source",
-        "cursorPosition": "225,17",
-        "scrollLine": "215",
-        "last_setup_crc32": "a7dd6d1ff889a723",
-        "ignored_words": "quartiles\n"
+        "Source": "Source"
     },
     "folds": "",
     "lastKnownWriteTime": 1782497208,
