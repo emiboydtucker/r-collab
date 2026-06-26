@@ -9,17 +9,69 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Load libraries
+#Load libraries
 ```{r}
 library(tidyverse)
 library(skimr)
 ```
 
-Load data
+#Load data
 ```{r}
-read_csv("~/R Studio/r-collab/ClassNotes/Lesson7/20250730_AYKSSI_ASL_chum_export.csv")
+chum <- read_csv("~/R Studio/r-collab/ClassNotes/Lesson7/20250730_AYKSSI_ASL_chum_export.csv")
 
 skim(chum)
 
 ```
+
+#Warm up:
+
+Subset dataset to only include collections after 2010 located above 64 degrees latitude. Pipe this to ggplot to visualize results.
+```{r}
+
+chum %>%
+  filter(CollectionYear > 2010, StartLatitudeDD > 64) %>%
+  select(CollectionYear, StartLatitudeDD)
+
+```
+
+#Mutate()
+
+```{r}
+chum_asl <- chum %>%
+  filter(is.na(AgeYRS) == F)
+# estimate growth rate
+
+chum_asl %>% mutate(growthrate = LengthMM/ AgeYRS)
+```
+```{r}
+chum_asl %>% mutate(growthrate = LengthMM/ AgeYRS, .after = LengthMM)
+```
+
+#arrange()
+
+We can sort our dataset by the 10 highest conc. Default organizes by 10 lowest first
+```{r}
+
+chum %>% 
+  arrange(DNAngul) %>%
+  select(ABLG, ExtractionPlate, ExtractionWell, DNAngul)
+#if we want the highest conc.
+chum %>% arrange(desc(DNAngul)) %>% select(ABLG, ExtractionPlate, ExtractionWell, DNAngul)
+
+```
+
+How many indvs are longer than 650mm and which pop did the largest indv come from
+```{r}
+
+```
+
+
+#Summarize() and group_by()
+
+Obtain mean conc. by pop. (can use na.rm for the mean_conc() operation for removing NA values in summarize())
+```{r}
+
+```
+
+
 
