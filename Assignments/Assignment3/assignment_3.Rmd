@@ -159,7 +159,7 @@ ggplot(economist_data) +
 
 ggplot(economist_data, aes(x = Region, y = HDI)) +
   geom_boxplot(aes(fill = Region, color = Region), alpha = 0.5, outliers = FALSE) +
-  geom_jitter(aes(color = Region))
+  geom_jitter(aes(color = Region), width = 0.2)
 ```
 
 <br><br>
