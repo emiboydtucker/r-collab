@@ -1,0 +1,23 @@
+x <- luvcat
+x <- 50
+xy <- luvcat
+y <- 60
+objects()
+rm(x)
+rm(list = ls())
+seq(1,20)
+mean(seq(1, 20))
+x <- mean(seq(1, 20))
+getwd()
+getwd()
+`summary(cars)`
+summary(cars)
+plot(pressure)
+seq(1,30, by= 5)
+summary(pressure)
+summary(pressure)
+8*22
+8*22
+8*22
+8*22
+8*22

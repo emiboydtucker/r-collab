@@ -1,0 +1,28 @@
+---
+title: "CV: Emi Boyd-Tucker"
+date: "**2026-05-23**"
+output: html_document
+---
+
+#### **Education** 
+* University of Alaska Southeast (UAS) **(2024)** ^[This is the year I graduated]
+  + Bachelor's of Science in Biology; Minor in Chemistry
+  + *Magna cum laude* ; GPA: 3.87
+  
+* Keene State College (no diploma, **2019-2022**) ^[I did not graduate as I transferred to UAS]
+  
+#### **Employment**
+* Employer: Pacific States Marine Fisheries Commission **(March 2026-Present)**
+  + Job title: Molecular Biologist 2
+    - Job Duties:
+      + Genotyping various fish species
+      + Maintaining efficiency, organization, and improvement in the genetics lab
+      + Producing data required for fisheries management across the coast of Alaska
+      
+* Employer: Alaska INBRE/UAS **(Academic year of 2023-2024**)
+  + Job title: Undergraduate Researcher
+    - Objective: Develop an improved solid phase extraction method of thiamine (Vitamin B1) in Chinook salmon eggs.
+    - Outcomes:
+        - Developed a proficiency in the chemistry lab at the TSMRI NOAA Fisheries facility in Juneau, AK
+        - Compared efficacy of SPE method to traditional HPLC method showing there were no statistical differences.
+        - Improved upon communicating science skills via presenting to the ACS NORM 2024 Conference
