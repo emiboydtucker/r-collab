@@ -1,0 +1,5 @@
+"0",""
+"0","economist_data %>%"
+"0","    head() %>%"
+"0","    kable() %>%"
+"0","    kable_styling(full_width = FALSE, bootstrap_options = c(""striped"", ""bordered""))"

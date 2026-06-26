@@ -1,0 +1,72 @@
+---
+title: "RMarkdownPractice"
+author: "Emi"
+date: "2026-05-22"
+output: html_document
+---
+
+## Header
+<br><br>
+
+# Hope this is also header
+<br><br>
+
+### Subheader
+<br><br>
+
+####### another further subheader
+<br><br>
+
+**I am bold**
+<br><br>
+
+*I am italic*
+<br><br>
+<br>
+***I am bold italic***
+<br>
+`I am writing verbatim code text`
+<br>
+<span style="color: pink;">this text will hopefully be pink, I love pink.</span>
+[this is a url](url)
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+Do I have a blank line above?
+
+*Is italic derived from italians?*Make a numbered list*
+
+`seq(1,30, by= 5)`
+
+
+## Adding a subheader
+### Another sub
+
+![baby seal](url to image that doesnt't work)
+![baby seal](C:/Users/emi.boyd-tucker/Pictures/Camera Roll/baby_seal.jpg)
+
+| Right | Left | Default | Center |
+|------:|:-----|---------|:------:|
+| 12 | 12 | 12 | 12 |
+| 123 | 123 | 123 | 123 |
+| 1 | 1 | 1 | 1 | 
+
+```{r, echo= FALSE}
+summary(cars)
+
+plot(pressure)
+```
+
+```{r}
+seq(1,30, by= 5)
+```
+
+
+```{r}
+summary(pressure)
+```
+
+```{r calculate}
+8*22
+```
+
+
+

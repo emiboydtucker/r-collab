@@ -1,0 +1,6 @@
+"0","#load the data
+economics <- read.csv(""http://research.stlouisfed.org/fred2.csv"")
+"
+"2","Error in file(file, ""rt"") : 
+  cannot open the connection to 'http://research.stlouisfed.org/fred2.csv'
+"
