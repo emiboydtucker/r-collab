@@ -1,0 +1,25 @@
+---
+title: "Lesson8"
+author: "Emi"
+date: "2026-06-26"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load libraries
+```{r}
+library(tidyverse)
+library(skimr)
+```
+
+Load data
+```{r}
+read_csv("~/R Studio/r-collab/ClassNotes/Lesson7/20250730_AYKSSI_ASL_chum_export.csv")
+
+skim(chum)
+
+```
+
