@@ -62,7 +62,13 @@ chum %>% arrange(desc(DNAngul)) %>% select(ABLG, ExtractionPlate, ExtractionWell
 
 How many indvs are longer than 650mm and which pop did the largest indv come from
 ```{r}
+View(chum)
+skim(chum)
+chum %>% filter(LengthMM > 650) %>% select(LengthMM, FreshwaterWatershed)
 
+chum %>% filter(LengthMM > 650) %>% arrange(desc(LengthMM))
+
+#there are 5 individuals longer than 650mm, but the longest indv came from Henshaw Creek-early at 670mm.
 ```
 
 
@@ -70,7 +76,23 @@ How many indvs are longer than 650mm and which pop did the largest indv come fro
 
 Obtain mean conc. by pop. (can use na.rm for the mean_conc() operation for removing NA values in summarize())
 ```{r}
+#one way to find the mean of all indvs
+chum %>% filter(is.na(DNAngul) == F) %>% summarize(mean_conc = mean(DNAngul))
 
+#a different way to find the mean:
+mean(chum$DNAngul, na.rm = T)
+
+chum %>% 
+  filter(is.na(DNAngul) == F) %>% 
+  group_by(FreshwaterWatershed) %>% 
+  summarize(mean_conc = mean(DNAngul))
+#30 pops generate out of 53 because not all pops have DNA conc data
+
+chum_dat %>% 
+  #na.rm =T serves the same purpose as "filter(is.na(DNAngul) == F)" %>% 
+  #here is another way to find the mean conc per pop, without filter
+  group_by(FreshwaterWatershed) %>% 
+  summarize(mean_conc = mean(DNAngul, na.rm = T))
 ```
 
 ##From Carl's Quarto document:
