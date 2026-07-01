@@ -1,3 +1,0 @@
-"0",""
-"0","ggplot(data = economist_data) +"
-"0","  geom_point(mapping = aes(x = CPI, y = HDI, color = Region), size = 2)"
