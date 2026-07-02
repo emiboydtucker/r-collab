@@ -1,6 +1,0 @@
-"0",""
-"0","ggplot(data = economist_data) +"
-"0","  geom_point(mapping = aes(x = CPI, y = HDI, color = Region, size = HDI.Rank))+"
-"0","  guides("
-"0","    color = guide_legend(order = 1),"
-"0","    size = guide_legend(order = 2))"
