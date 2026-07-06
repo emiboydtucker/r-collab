@@ -47,6 +47,21 @@ chum_asl %>% mutate(growthrate = LengthMM/ AgeYRS)
 chum_asl %>% mutate(growthrate = LengthMM/ AgeYRS, .after = LengthMM)
 ```
 
+Excercise 2
+
+Get the growthrate of males (1) and females (2) separately in two new columns
+
+```{r}
+chum %>% mutate(growthrate = LengthMM/ AgeYRS, .after = LengthMM) %>% 
+  mutate(FemaleGrowthrate = growthrate, Sex = 2, .after = growthrate) %>% 
+  mutate(MaleGrowthrate = case_when(growthrate, Sex = 1, .after = FemaleGrowthrate) %>% 
+  filter(is.na(FemaleGrowthrate) == F) %>% 
+   filter(is.na(MaleGrowthrate) == F)
+```
+
+
+
+
 ##arrange()
 
 We can sort our dataset by the 10 highest conc. Default organizes by 10 lowest first
@@ -100,6 +115,15 @@ chum_dat %>%
 #### exercise
 
 What is the largest fish caught at the earliest year?
+
+```{r}
+chum %>% arrange(desc(LengthMM)) %>% arrange(CollectionYear) %>% 
+  filter(is.na(LengthMM) == F) %>% 
+  select(ABLG, LengthMM, CollectionYear)
+
+#the largest fish caught at the earliest year is ABLG #49272	@670mm in 2021 (the earliest year with length #value input)
+```
+
 
 ## summarize() and group_by()
 
