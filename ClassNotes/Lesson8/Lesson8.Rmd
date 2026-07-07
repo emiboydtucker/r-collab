@@ -57,6 +57,9 @@ chum %>% mutate(growthrate = LengthMM/ AgeYRS, .after = LengthMM) %>%
   mutate(MaleGrowthrate = case_when(growthrate, Sex = 1, .after = FemaleGrowthrate) %>% 
   filter(is.na(FemaleGrowthrate) == F) %>% 
    filter(is.na(MaleGrowthrate) == F)
+  
+  
+  #### COME BACK WITH HELP LATER
 ```
 
 
@@ -70,6 +73,7 @@ We can sort our dataset by the 10 highest conc. Default organizes by 10 lowest f
 chum %>% 
   arrange(DNAngul) %>%
   select(ABLG, ExtractionPlate, ExtractionWell, DNAngul)
+
 #if we want the highest conc.
 chum %>% arrange(desc(DNAngul)) %>% select(ABLG, ExtractionPlate, ExtractionWell, DNAngul)
 
@@ -87,28 +91,6 @@ chum %>% filter(LengthMM > 650) %>% arrange(desc(LengthMM))
 ```
 
 
-##Summarize() and group_by()
-
-Obtain mean conc. by pop. (can use na.rm for the mean_conc() operation for removing NA values in summarize())
-```{r}
-#one way to find the mean of all indvs
-chum %>% filter(is.na(DNAngul) == F) %>% summarize(mean_conc = mean(DNAngul))
-
-#a different way to find the mean:
-mean(chum$DNAngul, na.rm = T)
-
-chum %>% 
-  filter(is.na(DNAngul) == F) %>% 
-  group_by(FreshwaterWatershed) %>% 
-  summarize(mean_conc = mean(DNAngul))
-#30 pops generate out of 53 because not all pops have DNA conc data
-
-chum_dat %>% 
-  #na.rm =T serves the same purpose as "filter(is.na(DNAngul) == F)" %>% 
-  #here is another way to find the mean conc per pop, without filter
-  group_by(FreshwaterWatershed) %>% 
-  summarize(mean_conc = mean(DNAngul, na.rm = T))
-```
 
 ##From Carl's Quarto document:
 
@@ -134,14 +116,14 @@ We can pair it with group_by() to get more useful statistics
 mean DNA concentration per population:
 
 ```{r}
-chum_dat %>% filter(is.na(DNAngul) == F) %>% summarise(mean_conc = mean(DNAngul))
+chum_dat %>% filter(is.na(DNAngul) == F) %>% summarize(mean_conc = mean(DNAngul))
 
 mean(chum_dat$DNAngul, na.rm = T)
 
 chum_dat %>% 
   filter(is.na(DNAngul) == F) %>% 
   group_by(FreshwaterWatershed) %>% 
-  summarise(mean_conc = mean(DNAngul))
+  summarize(mean_conc = mean(DNAngul))
 # notice only 30 of 53 pops are represented here. Some pops dont have any DNA conc data
 chum_dat %>% 
   #filter(is.na(DNAngul) == F) %>% 
@@ -149,10 +131,57 @@ chum_dat %>%
   summarize(mean_conc = mean(DNAngul, na.rm = T))
 ```
 
+
+
+
+##My work based on Carl's worksheet
+
+###Summarize() and group_by()
+
+Obtain mean conc. by pop. (can use na.rm for the mean_conc() operation for removing NA values in summarize())
+```{r}
+#one way to find the mean of all indvs
+chum %>% filter(is.na(DNAngul) == F) %>% summarize(mean_conc = mean(DNAngul))
+
+#a different way to find the mean:
+mean(chum$DNAngul, na.rm = T)
+
+chum %>% 
+  filter(is.na(DNAngul) == F) %>% 
+  group_by(FreshwaterWatershed) %>% 
+  summarize(mean_conc = mean(DNAngul))
+#30 pops generate out of 53 because not all pops have DNA conc data
+
+chum_dat %>% 
+  #na.rm =T serves the same purpose as "filter(is.na(DNAngul) == F)" %>% 
+  #here is another way to find the mean conc per pop, without filter
+  group_by(FreshwaterWatershed) %>% 
+  summarize(mean_conc = mean(DNAngul, na.rm = T))
+```
+
+##continuing Carl's exercise/worksheet:
+
 #### exercise
 
 Which population has the largest mean length?
 
+```{r}
+chum %>% filter(is.na(LengthMM) == F) %>% 
+  group_by(FreshwaterWatershed) %>% 
+  summarize(mean_length = mean(LengthMM)) %>% 
+  arrange(desc(mean_length))
+
+#Anvik River has the largest mean length!
+```
+
 ##### bonus exercise
 
 Show the lengths of each population using ggplot2 as a boxplot.
+```{r}
+chum_length <- chum %>% filter(is.na(LengthMM) == F)
+
+ggplot(chum_length, aes(x = FreshwaterWatershed, y = LengthMM)) +
+         geom_boxplot(aes(fill = FreshwaterWatershed, color = FreshwaterWatershed), alpha = 0.5)
+
+```
+
