@@ -52,16 +52,28 @@ Excercise 2
 Get the growthrate of males (1) and females (2) separately in two new columns
 
 ```{r}
-chum %>% mutate(growthrate = LengthMM/ AgeYRS, .after = LengthMM) %>% 
+chum %>% mutate(growthrate = LengthMM/AgeYRS, .after = LengthMM) %>% 
   mutate(FemaleGrowthrate = growthrate, Sex = 2, .after = growthrate) %>% 
-  mutate(MaleGrowthrate = case_when(growthrate, Sex = 1, .after = FemaleGrowthrate) %>% 
+  mutate(MaleGrowthrate = case_when(growthrate, Sex = 1, .after = FemaleGrowthrate)) %>% 
   filter(is.na(FemaleGrowthrate) == F) %>% 
-   filter(is.na(MaleGrowthrate) == F)
+  filter(is.na(MaleGrowthrate) == F)
   
   
   #### COME BACK WITH HELP LATER
 ```
 
+```{r}
+chum %>% mutate(growthrate = LengthMM/AgeYRS, .after = LengthMM) %>% filter(Sex == 1)
+
+
+View(chum)
+
+#can use if else statement
+
+chum %>% mutate(growthrate_m = ifelse(Sex ==1, LengthMM/ AgeYRS, NA),
+  growthrate_f = ifelse(Sex ==2, LengthMM/ AgeYRS, NA)) %>% 
+  filter(is.na(Sex) == F)
+```
 
 
 
