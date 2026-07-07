@@ -1,0 +1,169 @@
+---
+title: "Lesson9"
+author: "Emi"
+date: "2026-07-07"
+output: html_document
+---
+
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(knitr))
+
+coronavirus <- read_csv('https://raw.githubusercontent.com/RamiKrispin/coronavirus/master/csv/coronavirus.csv', col_types = cols(province = col_character()))
+
+# Has it been updated? Check the latest date?
+max(coronavirus$date)
+
+View(coronavirus)
+```
+
+###Let’s start with summarizing the total number of cases by type as of the most recent day in the dataset
+
+```{r}
+names(coronavirus)
+
+cases <- coronavirus %>% group_by(type) %>% 
+  summarize(cases = sum(cases))
+kable(cases) # kable() just provides a nice output for the table
+
+cases
+View(cases)
+
+```
+
+
+###Now, let’s plot the history of the daily counts of new confirmed cases worldwide
+```{r}
+# We first have to summarize the data, then plot those summary statistics
+# Note that we can pipe dplyr output directly into ggplot
+coronavirus %>%  
+  filter(type == "confirmed") %>% 
+  group_by(date) %>% 
+  summarize(total_cases = sum(cases)) %>% 
+  ggplot(mapping = aes(x = date, y = total_cases)) +
+  geom_line()
+
+# If we want to play around with different geoms, we can store dplyr data processing steps and initiation of the ggplot as object gg_base so that we don’t need to retype it each time
+
+# define a base map dataset
+gg_base <- coronavirus %>%  
+  filter(type == "confirmed") %>% 
+  group_by(date) %>% 
+  summarize(total_cases = sum(cases)) %>% 
+  ggplot(mapping = aes(x = date, y = total_cases))
+
+# line
+gg_base +
+  geom_line()
+
+# point
+gg_base +
+  geom_point()
+
+# line and point
+gg_base +
+  geom_line() + 
+  geom_point()
+
+# area
+gg_base +
+  geom_area()
+
+```
+
+```{r}
+gg_base +
+  geom_col(color="red")
+```
+### We can change the aesthetics of elements in a ggplot graph by adding arguments within the layer where that element is created. Some common arguments we’ll use first are:
+
+####color =: update point or line colors
+####fill =: update fill color for objects with areas
+####linetype =: update the line type (dashed, long dash, etc.)
+####pch =: update the point style
+####size =: update the element size (e.g. of points or line thickness)
+####alpha =: update element opacity (1 = opaque, 0 = transparent)
+#####Building on our first line graph, let’s update the line color to “purple” and make the line type “dashed”:
+
+```{r}
+gg_base +
+  geom_line(
+    color = "purple",
+    linetype = "dashed"
+  )
+```
+###How do we know which color names ggplot will recognize? If you google “R colors ggplot2” you’ll find a lot of good resources. Here’s one: SAPE ggplot2 colors quick reference guide
+
+###Now let’s update the point, style and size of points on our previous scatterplot graph using color =, size =, and pch = (see ?pch for the different point styles, which can be further customized).
+```{r}
+gg_base + 
+  geom_point(color = "purple",
+             pch = 17,
+             size = 4,
+             alpha = 0.5)
+```
+
+###Example: Create a ggplot scatterplot graph where the size and color of the points change based on the number of cases, and make all points the same level of opacity (alpha = 0.5). Notice the aes() around the size = and color = arguments.
+
+###Note: this is just for illustration of the functionality only - we are showing the same information in redundant ways, which is typically not helpful or necessary. Avoid excessive / overcomplicated aesthetic mapping in data visualization.
+
+```{r}
+gg_base + 
+  geom_point(
+    aes(size = total_cases,
+        color = total_cases),
+    alpha = 0.5
+  )
+
+#In the example above, notice that the two arguments that do depend on variables are within aes(), but since alpha = 0.5 doesn’t depend on a variable then it is outside the aes() but still within the geom_point() layer.
+```
+
+###While every element of a ggplot graph is manually customizable, there are also built-in themes (theme_*()) that you can add to your ggplot code to make some major headway before making smaller tweaks manually.
+
+###We talked about this briefly a few classes ago, but let’s explore a little further. Here are a few to try today (but also notice all the options that appear as we start typing theme_ into our ggplot graph code!):
+
+####theme_light()
+####theme_minimal()
+####theme_bw()
+####Also, check out more examples by scrolling down here. Pick one that you like and update your previous plot.
+
+#####Here, let’s update our previous graph with theme_minimal():
+```{r}
+gg_base + 
+  geom_point(
+    aes(size = total_cases,
+        color = total_cases),
+    alpha = 0.5
+  ) +
+  theme_minimal()
+```
+##Updating axis labels and titles
+###Use labs() to update axis labels, and add a title and/or subtitle to your ggplot graph.
+```{r}
+gg_base +
+  geom_line(linetype = "dotted") +
+  theme_bw() +
+  labs(
+    x = "Date",
+    y = "Total confirmed cases",
+    title = "Daily counts of new Coronavirus cases recorded",
+    subtitle = "Global sums"
+  )
+```
+#Now, let’s split the case counts out by country
+
+
+###Your turn
+####Take a minute to think about how you would generate a plot with a separate line showing the daily reports of new confirmed cases in each country.
+
+```{r}
+# We need columns date, country, and type = confirmed
+
+coronavirus %>% 
+```
+
+
+
+
+
+
