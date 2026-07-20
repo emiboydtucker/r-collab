@@ -2,7 +2,9 @@
 title: "Lesson9"
 author: "Emi"
 date: "2026-07-07"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r}
@@ -159,11 +161,125 @@ gg_base +
 ```{r}
 # We need columns date, country, and type = confirmed
 
+#this code below will not work:
 coronavirus %>% 
+   filter(type == "confirmed") %>% 
+  group_by(date) %>% 
+  summarize(total_cases = sum(cases)) %>% 
+  ggplot() +
+  geom_line(mapping = aes(x = date, y = total_cases, color = country))
+# We have summarized out the country details (only one total count per day)
+
+
+coronavirus %>%  
+  filter(type == "confirmed") %>% 
+  group_by(country, date) %>% 
+  summarize(total_cases = sum(cases)) %>% 
+  ggplot(mapping = aes(x = date, y = total_cases)) +
+  geom_line()
+# Even though we have grouped the dataframe by country, that dplyr grouping does not get carried into ggplot
+
 ```
 
 
+```{r}
+#Now let’s make ggplot group the data too by mapping country onto an aesthetic
+coronavirus %>%  
+  filter(type == "confirmed") %>% 
+  group_by(country, date) %>% 
+  summarize(total_cases = sum(cases)) %>% 
+  ggplot(mapping = aes(x = date, y = total_cases, color = country)) +
+  geom_line()
+```
+```{r}
+#It looks like this is doing what we want, but it does not display well. There are too many countries! We could play around with the layout parameters to be able to see this plot. But let’s instead subset to only show the 10 countries with the highest total counts of confirmed cases.
+
+top10_countries <- coronavirus %>% 
+  filter(type == "confirmed") %>%
+  group_by(country) %>%
+  summarize(total_cases = sum(cases)) %>%
+  arrange(-total_cases) %>% 
+  head(10) %>% 
+  .$country
+
+View(top10_countries)
+
+#Now let’s try to plot the daily counts of new cases just for those countries
+coronavirus %>%  
+  filter(type == "confirmed", country %in% top10_countries) %>% 
+  group_by(country, date) %>% 
+  summarize(total_cases = sum(cases)) %>%  # Need this summarize because some countries have data broken down by Province.State
+  ggplot(mapping = aes(x = date, y = total_cases, color = country)) +
+  geom_line()
 
 
+#We can also make a separate panel for each country
 
+coronavirus %>%  
+  filter(type == "confirmed", country %in% top10_countries) %>% 
+  group_by(country, date) %>% 
+  summarize(total_cases = sum(cases)) %>% 
+  ggplot(mapping = aes(x = date, y = total_cases, color = country)) +
+  geom_line() +
+  facet_wrap(~country)
+```
+
+
+```{r}
+#Now let’s plot the cumulative sum of cases for each of those countries instead
+
+
+coronavirus %>%  
+  filter(type == "confirmed", country %in% top10_countries) %>%
+  group_by(country) %>% 
+  arrange(date) %>% 
+  mutate(cum_count = cumsum(cases)) %>% 
+  ggplot(mapping = aes(x = date, y = cum_count, color = country)) +
+  geom_line()
+
+
+```
+```{r}
+#Another common plot type are bar charts. There are two types of bar charts in ggplot: geom_bar() and geom_col(). geom_bar() makes the height of the bar proportional to the number of cases in each group (or if the weight aesthetic is supplied, the sum of the weights). If you want the heights of the bars to represent values in the data, use geom_col() instead.
+
+#Since our dataset reports counts of cases, let’s first start with geom_col() (we have already used it once today).
+
+coronavirus %>% 
+  group_by(date) %>%
+  summarize(cases = sum(cases)) %>%
+  ggplot() +
+  geom_col(aes(x = date, y = cases), color = "black")
+
+#wut the heck. Why are there negative cases. This dataset seems skewwed, the negatives can be removed for a 
+#better picture but why are they there to begin with
+
+```
+
+```{r}
+#If we want a stacked barplot separating out the different types of cases, we can use the fill aesthetic
+
+coronavirus %>% 
+  group_by(date, type) %>% filter(cases > 0) %>% 
+  summarize(cases = sum(cases)) %>%
+  ggplot() +
+  geom_col(aes(x = date, y = cases, fill = type), size=0.1)
+
+
+#flip!
+coronavirus %>% 
+  group_by(date, type) %>% filter(cases > 0) %>% 
+  summarize(cases = sum(cases)) %>%
+  ggplot() +
+  geom_col(aes(x = date, y = cases, fill = type), size=0.1) +
+  coord_flip()
+```
+```{r}
+#This is useful because it puts the proportions in relation to the total daily counts. But it can be hard to compare proportions. We can make all bars the same height with ‘position adjustment’
+
+coronavirus %>% filter(cases > 0) %>% 
+  group_by(date, type) %>%
+  summarize(cases = sum(cases)) %>%
+  ggplot() +
+  geom_col(aes(x=date, y = cases, fill = type, color = type), size=0.1, position = "fill")
+```
 
