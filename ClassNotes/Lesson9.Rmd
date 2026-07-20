@@ -284,3 +284,140 @@ coronavirus %>% filter(cases > 0) %>%
   geom_col(aes(x=date, y = cases, fill = type, color = type), size=0.1, position = "fill")
 ```
 
+Let’s check if we have negative cases.
+```{r}
+coronavirus %>% 
+  filter(cases < 0)
+```
+```{r}
+#we already did this above but ok
+# Let's remove those
+coronavirus %>% 
+  filter(cases > 0) %>% 
+  group_by(date, type) %>%
+  summarize(cases = sum(cases)) %>%
+  ggplot() +
+  geom_col(aes(x = date, y = cases, fill = type), size=0.1, position = "fill")
+```
+We can also get the bars for the different types of cases each day stacked next to each other with another position adjustment option
+```{r}
+
+coronavirus %>% 
+  filter(cases > 0) %>% 
+  group_by(date, type) %>%
+  summarize(cases = sum(cases)) %>%
+  ggplot() +
+  geom_col(aes(x = date, y = cases, fill = type), position = "dodge")
+```
+Now, let’s break it down by country. Let’s again subset to only the top 10 countries with the highest counts
+
+``` {r} 
+coronavirus %>% 
+  filter(cases > 0, country %in% top10_countries) %>%
+  group_by(country, type, date) %>%
+  summarize(cases = sum(cases)) %>%
+  ggplot() +
+  geom_col(aes(x = date, y = cases, fill = type), position = "fill", width = 1) +
+  facet_wrap(~country)
+```
+
+
+
+
+While looking at the proportions of case types in different areas is helpful for comparing patterns, they don’t allow for comparison of the magnitude of case counts. Let’s again scale the bars by the raw case counts.
+
+``` {r}
+coronavirus %>% 
+  filter(cases > 0, country %in% top10_countries) %>%
+  group_by(country, type, date) %>%
+  summarize(cases=sum(cases)) %>%
+  ggplot() +
+  geom_col(aes(x=date, y = cases, fill = type), position = "identity", width = 1) +
+  facet_wrap(~country)
+```
+
+Now, let’s explore a different question. For each day, let’s plot how many different countries have at least one new confirmed case. For this we will need to count rows within grouped variables, so we’ll use the geom_bar()
+
+``` {r} 
+#How many countries have at least one confirmed case each day
+coronavirus %>%
+  filter(type == "confirmed") %>% 
+  group_by(country, date) %>% 
+  summarize(total_cases = sum(cases)) %>% 
+  filter(total_cases > 0) %>% 
+  ggplot() +
+  geom_bar(mapping = aes(x = date), color="black")
+
+```
+Now let’s look at the relationship between confirmed cases and deaths in each country. For this we will need our re-formatted wide data from last class.
+
+``` {r} 
+coronavirus_ttd <- coronavirus %>% 
+  select(country, type, cases) %>%
+  group_by(country, type) %>%
+  summarize(total_cases = sum(cases)) %>%
+  pivot_wider(names_from = type,
+              values_from = total_cases) %>%
+  arrange(-confirmed)
+
+ggplot(coronavirus_ttd) +
+  geom_point(mapping = aes(x = confirmed, y = death))
+```
+
+It is useful to know which country is represented by each dot. geom_label is our tool for that.
+
+``` {r} 
+ggplot(coronavirus_ttd) +
+  geom_label(mapping = aes(x = confirmed, y = death, label = country))
+```
+
+Let’s do a few things to make this easier to read
+
+We can remove countries with a small number of confirmed cases
+
+``` {r}
+ggplot(data = filter(coronavirus_ttd, confirmed > 10000000)) +
+  geom_label(mapping = aes(x = confirmed, y = death, label = country))
+```
+
+
+We can remove the area with low confirmed case count from the plot
+
+``` {r} 
+ggplot(data = filter(coronavirus_ttd, confirmed > 10000000)) +
+  geom_label(mapping = aes(x = confirmed, y = death, label = country)) +
+  xlim(5000000, max(coronavirus_ttd$confirmed))
+```
+
+Or zoom in on that region
+
+``` {r} 
+ggplot(data = filter(coronavirus_ttd)) +
+  geom_label(mapping = aes(x = confirmed, y = death, label = country)) +
+  xlim(5000000, 7000000)
+```
+
+Map of newly reported cases
+With some additional packages, we can also plot geographical patterns on a map. We can, for example, show which countries have new counts of >5000 new confirmed cases on the most recent day from this dataset and scale the points with case counts.
+
+``` {r} 
+library("rnaturalearth") # install.packages("rnaturalearth")
+library("rnaturalearthdata") # install.packages("rnaturalearthdata")
+library("sf") #install.packages("sf")
+
+
+#RGEOS WAS FULLY RETIRED IN 2023, MUST US SF LIBRARY: library("rgeos") # install.packages("rgeos")
+```
+
+```{r}
+world <- ne_countries(scale = "medium", returnclass = "sf")
+filter(coronavirus, date == max(coronavirus$date), type == "confirmed", cases > 5000) %>%
+  ggplot() +
+  geom_sf(data = world) +
+  geom_point(aes(x=long, y=lat, size=cases), color="red", fill="red", alpha=0.5, shape=21)
+```
+
+See following lesson for more exercises/clarity when trying to use this code and these functions:
+https://nt246.github.io/NTRES6940-data-science/lesson9-ggplot-part2.html#combining_dplyr_and_ggplot 
+
+
