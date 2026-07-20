@@ -3,8 +3,9 @@ title: "Lesson9"
 author: "Emi"
 date: "2026-07-07"
 output:
-  html_document: default
+  word_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ```{r}
