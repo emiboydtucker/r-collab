@@ -29,9 +29,6 @@ cases <- coronavirus %>% group_by(type) %>%
   summarize(cases = sum(cases))
 kable(cases) # kable() just provides a nice output for the table
 
-cases
-View(cases)
-
 ```
 
 
@@ -162,14 +159,14 @@ gg_base +
 ```{r}
 # We need columns date, country, and type = confirmed
 
-#this code below will not work:
-coronavirus %>% 
-   filter(type == "confirmed") %>% 
-  group_by(date) %>% 
-  summarize(total_cases = sum(cases)) %>% 
-  ggplot() +
-  geom_line(mapping = aes(x = date, y = total_cases, color = country))
-# We have summarized out the country details (only one total count per day)
+######this code below will not work:
+#coronavirus %>% 
+   #filter(type == "confirmed") %>% 
+ # group_by(date) %>% 
+ # summarize(total_cases = sum(cases)) %>% 
+  #ggplot() +
+  #geom_line(mapping = aes(x = date, y = total_cases, color = country))
+########### We have summarized out the country details (only one total count per day)
 
 
 coronavirus %>%  
