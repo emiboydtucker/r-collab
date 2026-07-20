@@ -1,0 +1,67 @@
+---
+title: "Untitled"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+install.packages("janitor")
+```
+```{r}
+# Attach packages
+library(tidyverse)
+library(janitor)  ## install.packages("janitor")
+```
+
+Import datasets
+```{r}
+lotr <- read_csv("https://raw.githubusercontent.com/jennybc/lotr-tidy/master/data/lotr_tidy.csv")
+```
+
+```{r}
+fship <- read_csv("https://raw.githubusercontent.com/jennybc/lotr-tidy/master/data/The_Fellowship_Of_The_Ring.csv")
+```
+```{r}
+ttow <- read_csv("https://raw.githubusercontent.com/jennybc/lotr-tidy/master/data/The_Two_Towers.csv")
+```
+
+```{r}
+rking <- read_csv("https://raw.githubusercontent.com/jennybc/lotr-tidy/master/data/The_Return_Of_The_King.csv")
+```
+#gather these data
+```{r}
+lotr_untidy <- bind_rows(fship, ttow, rking)
+str(lotr_untidy)
+
+lotr_untidy
+```
+#tidy up the data by combining the gender columns
+```{r}
+lotr_tidy <-
+  pivot_longer(lotr_untidy, c(Male, Female), names_to = 'Gender', values_to = 'Words')
+
+lotr_tidy
+```
+
+#getting one variable per race
+```{r}
+lotr_tidy %>%  
+  pivot_wider(names_from = Race, values_from = Words)
+```
+#Separating gender columns
+```{r}
+lotr_tidy %>% 
+  pivot_wider(names_from = Gender, values_from = Words)
+```
+#Unite gender and race columns
+```{r}
+# let's get one variable per combo of Race and Gender
+lotr_tidy %>% 
+  unite(Race_Gender, Race, Gender) %>% 
+  pivot_wider(names_from = Race_Gender, values_from = Words)
+```
+
