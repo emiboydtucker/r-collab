@@ -1,0 +1,50 @@
+---
+title: "GTscoreLesson"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load relevant libs and packages
+```{r}
+library(tidyverse)
+library(ggplot2)
+```
+
+```{r}
+flashed <- read_tsv("~/R Studio/GTscore/20260709_DNAplates172_176_rnd1_GTscore_locusSummary.txt") %>% 
+  select(Locus, `Primer Reads`) %>% 
+  rename(flashed_reads = `Primer Reads`)
+head(flashed)
+
+flashed
+
+R1_tmp <- read_tsv("~/R Studio/GTscore/20260709_DNAplates172_176_R1_rnd1_GTscore_locusSummary.txt") %>% 
+  select(Locus, `Primer Reads`) %>% 
+  rename(R1_reads = `Primer Reads`)
+head(R1_tmp)
+```
+## to combine the datasets in order to make plots comparing R1_reads with flashed_reads
+```{r}
+combo_df <- left_join(flashed, R1_tmp, by = "Locus")
+head(combo_df)
+```
+
+## make a scatterplot with flashed x on x axis and R1 on y axis
+
+```{r}
+ggplot(combo_df) +
+  geom_point(aes(x = flashed_reads, y = R1_reads))
+```
+## Now make a colored scatterplot displaying the points where the R1 reads are double or more than the flashed reads
+```{r}
+combo_df_offtargets <- combo_df %>% mutate(offtarget_reads = R1_reads/flashed_reads >= 2)
+head(combo_df_offtargets)
+
+ggplot(combo_df_offtargets) +
+  geom_point(aes(x = flashed_reads, y = R1_reads, color = offtarget_reads)) 
+
+```
+
