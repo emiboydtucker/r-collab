@@ -10,6 +10,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 install.packages("janitor", repos = "https://cloud.r-project.org")
+##in the future, install the package in the console or else the file won't knit
+# or you will have to indicate a cloud mirror like I have above (repos)
 ```
 ```{r}
 # Attach packages
