@@ -9,7 +9,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ```{r}
-install.packages("janitor")
+install.packages("janitor", repos = "https://cloud.r-project.org")
 ```
 ```{r}
 # Attach packages
