@@ -14,14 +14,14 @@ library(ggplot2)
 ```
 
 ```{r}
-flashed <- read_tsv("~/R Studio/GTscore/20260709_DNAplates172_176_rnd1_GTscore_locusSummary.txt") %>% 
+flashed <- read_tsv("~/R Studio/r-collab/GTscore/20260709_DNAplates172_176_rnd1_GTscore_locusSummary.txt") %>% 
   select(Locus, `Primer Reads`) %>% 
   rename(flashed_reads = `Primer Reads`)
 head(flashed)
 
 flashed
 
-R1_tmp <- read_tsv("~/R Studio/GTscore/20260709_DNAplates172_176_R1_rnd1_GTscore_locusSummary.txt") %>% 
+R1_tmp <- read_tsv("~/R Studio/r-collab/GTscore//20260709_DNAplates172_176_R1_rnd1_GTscore_locusSummary.txt") %>% 
   select(Locus, `Primer Reads`) %>% 
   rename(R1_reads = `Primer Reads`)
 head(R1_tmp)
