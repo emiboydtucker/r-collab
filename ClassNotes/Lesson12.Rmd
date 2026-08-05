@@ -139,6 +139,8 @@ airports %>%
     geom_point() +
     coord_quickmap()
 
+View(planes)
+
 ```
 
 ```{r, eval = FALSE}
