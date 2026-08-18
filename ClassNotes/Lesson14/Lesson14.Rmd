@@ -12,3 +12,139 @@ library(tidyverse)
 library(gapminder) #install.packages("gapminder")
 ```
 
+```{r}
+## filter the country to plot
+gap_to_plot <- gapminder %>%
+  filter(country == "Afghanistan")
+
+## plot
+my_plot <- ggplot(data = gap_to_plot, aes(x = year, y = gdpPercap)) + 
+  geom_point() +
+  labs(title = "Afghanistan")
+## add title and save
+  labs(title = paste("Afghanistan", "GDP per capita", sep = " "))
+```
+
+Instead of having “Afghanistan” written 3 times, let’s instead create an object that we will assign “Afghanistan” to. We won’t name our object “country” because that’s a column header with gapminder, and will just confuse us. Let’s make it distinctive: let’s write cntry (country without vowels):
+
+```{r}
+## create country variable
+cntry <- "Afghanistan"
+
+## filter the country to plot
+gap_to_plot <- gapminder %>%
+  filter(country == cntry)
+
+## plot
+my_plot <- ggplot(data = gap_to_plot, aes(x = year, y = gdpPercap)) + 
+  geom_point() +
+  ## add title and save
+  labs(title = paste(cntry, "GDP per capita", sep = " "))
+## note: there are many ways to create filenames with paste() or file.path(); we are doing this way for a reason.
+ggsave(filename = paste(cntry, "_gdpPercap.png", sep = ""), plot = my_plot)
+```
+
+
+# Doing the above code 142 times would be ridiculous, so using a for loop can help:
+
+```{r, eval = F, message = F}
+# Let’s paste from what we had before, and modify it. I’m also going to use RStudio’s indentation help to indent the lines within the for loop by highlighting the code in this chunk and going to Code > Reindent Lines (shortcut: command I)
+
+# how a for loop works:
+#  for(an object in a list){code/functions tell it what to do}
+
+## create country variable
+cntry <- "Afghanistan"
+for (cntry in a list of countries) {
+  
+  ## filter the country to plot
+  gap_to_plot <- gapminder %>%
+    filter(country == cntry)
+  
+  ## plot
+  my_plot <- ggplot(data = gap_to_plot, aes(x = year, y = gdpPercap)) + 
+    geom_point() +
+    ## add title and save
+    labs(title = paste(cntry, "GDP per capita", sep = " "))
+  
+  ggsave(filename = paste(cntry, "_gdpPercap.png", sep = ""), plot = my_plot)
+  
+}
+```
+
+```{r}
+## create a list of countries
+country_list <- c("Albania", "Fiji", "Spain")
+
+for (cntry in country_list) {
+  print(cntry)
+  ## filter the country to plot
+  gap_to_plot <- gapminder %>%
+    filter(country == cntry)
+  
+  ## plot
+  my_plot <- ggplot(data = gap_to_plot, aes(x = year, y = gdpPercap)) + 
+    geom_point() +
+    ## add title and save
+    labs(title = paste(cntry, "GDP per capita", sep = " "))
+  
+  ggsave(filename = paste(cntry, "_gdpPercap.png", sep = ""), plot = my_plot)
+}
+```
+```{r}
+# let’s create a figure directory and make sure it saves there since it’s going to get out of hand quickly. We could do this from the Finder/Windows Explorer, or from the “Files” pane in RStudio by clicking “New Folder” (green plus button). But we are going to do it in R. A folder is called a directory:
+
+dir.create("figures") 
+
+## create a list of countries
+country_list <- unique(gapminder$country) # ?unique() returns the unique values
+
+for (cntry in country_list) {
+  
+  ## filter the country to plot
+  gap_to_plot <- gapminder %>%
+    filter(country == cntry)
+  
+  ## plot
+  my_plot <- ggplot(data = gap_to_plot, aes(x = year, y = gdpPercap)) + 
+    geom_point() +
+    ## add title and save
+    labs(title = paste(cntry, "GDP per capita", sep = " "))
+  
+  ## add the figures/ folder
+  ggsave(filename = paste("figures/", cntry, "_gdpPercap.png", sep = ""), plot = my_plot)
+} 
+```
+
+Modify our for loop so that it:
+loops through countries in Europe only
+plots the product of gdpPercap and population size per year (should approximate the total GDP)
+saves them to a new subfolder inside the (recreated) figures folder called “Europe”.
+Sync to GitHub
+
+```{r}
+dir.create("~/R Studio/r-collab/ClassNotes/Lesson14/figures/Europe")
+
+for (country in europe_country_list) {
+  
+  ## now filter by continent
+  gap_to_plot_europe <- gapminder %>% 
+    filter(continent == "Europe")
+  
+  gap_to_plot_europe <- gap_to_plot_europe %>% mutate(gdpPercapXpop = gdpPercap*pop)
+  
+  europe_country_list <-  unique(gap_to_plot_europe$country) # ?unique() returns the unique values
+  
+  ## plot
+  my_europe_plot <- ggplot(data = gap_to_plot_europe, aes(x = year, y = gdpPercapXpop)) + 
+    geom_point() +
+    ## add title and save
+    labs(title = paste(country, "GDP per capita in Europe", sep = " "))
+  
+  ## add the figures/ folder
+  ggsave(filename = paste("figures/Europe", cntry, "_gdpPercapXpop.png", sep = ""), plot = my_europe_plot)
+}
+
+View(gapminder)
+```
+
