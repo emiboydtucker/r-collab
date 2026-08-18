@@ -19,7 +19,7 @@ library(tidyverse)
 ``` r
 library(nycflights13) # install.packages("nycflights13")
 library(dplyr)
-library(ggplot2)
+library(ggplot2) # is already in tidyverse but just a reminder
 ```
 
 # Understanding nycflights13:
@@ -404,8 +404,34 @@ flight_locations <- flight_org_loc %>% full_join(flight_dest_loc,
 
 
 # there could be a much simpler way of doing this, potentially using full_join and
-# left_join without making a ton of new objects. IDK we are learning here.
+# left_join without making a ton of new objects. IDK we are learning here. Can consolidate:
+
+# carl's code:
+
+key <- airports %>%  select(faa, lat, lon)
+
+flights %>% left_join(key, c("origin" = "faa")) %>% rename("origin_lat" = lat, "origin_lon" = lon) %>% 
+  left_join(key, c("dest" = "faa")) %>% rename("dest_lat" = lat, "dest_lon" = lon)
 ```
+
+    ## # A tibble: 336,776 × 23
+    ##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+    ##    <int> <int> <int>    <int>          <int>     <dbl>    <int>          <int>
+    ##  1  2013     1     1      517            515         2      830            819
+    ##  2  2013     1     1      533            529         4      850            830
+    ##  3  2013     1     1      542            540         2      923            850
+    ##  4  2013     1     1      544            545        -1     1004           1022
+    ##  5  2013     1     1      554            600        -6      812            837
+    ##  6  2013     1     1      554            558        -4      740            728
+    ##  7  2013     1     1      555            600        -5      913            854
+    ##  8  2013     1     1      557            600        -3      709            723
+    ##  9  2013     1     1      557            600        -3      838            846
+    ## 10  2013     1     1      558            600        -2      753            745
+    ## # ℹ 336,766 more rows
+    ## # ℹ 15 more variables: arr_delay <dbl>, carrier <chr>, flight <int>,
+    ## #   tailnum <chr>, origin <chr>, dest <chr>, air_time <dbl>, distance <dbl>,
+    ## #   hour <dbl>, minute <dbl>, time_hour <dttm>, origin_lat <dbl>,
+    ## #   origin_lon <dbl>, dest_lat <dbl>, dest_lon <dbl>
 
 # THE LAST EXAMPLE PROBLEM:
 
@@ -414,27 +440,20 @@ flight_locations <- flight_org_loc %>% full_join(flight_dest_loc,
 ``` r
 View(planes)
 
-library(ggplot2)
 
 flight_delays <- flights %>% 
-  select(dep_delay, arr_delay, dest, origin, tailnum) %>% 
-  mutate(total_delay = dep_delay + arr_delay)
-
-flight_delays[c("dep_delay", "arr_delay")][is.na(flight_delays[c("dep_delay", "arr_delay")])] <- 0
+  select(dep_delay, arr_delay, dest, origin, tailnum)
 
 clean_planes <- planes %>% select(tailnum, year) %>% rename(Manufactured_year = year) %>% 
   arrange(Manufactured_year, decreasing = FALSE) %>% na.omit
 
 rel_plane_delay <- flight_delays %>% inner_join(clean_planes, by = "tailnum") %>% 
-  arrange(Manufactured_year, decreasing = FALSE)
+  arrange(Manufactured_year, decreasing = FALSE)%>% na.omit
 
 # seems to work but I'd love to make better visuals to display the relationship between age of plane and delay. ggplot is not my friend today.
 ggplot(rel_plane_delay) +
-  geom_point(aes(x = Manufactured_year, y = total_delay))
+  geom_point(aes(x = Manufactured_year, y = arr_delay))
 ```
-
-    ## Warning: Removed 5011 rows containing missing values or values outside the scale range
-    ## (`geom_point()`).
 
 ![](Lesson12_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
@@ -443,7 +462,7 @@ ggplot(rel_plane_delay) +
 
 # weird lines ahh what is this even
 ggplot(rel_plane_delay) +
-  geom_line(aes(x = Manufactured_year, y = total_delay))
+  geom_line(aes(x = Manufactured_year, y = arr_delay))
 ```
 
 ![](Lesson12_files/figure-gfm/unnamed-chunk-15-2.png)<!-- -->
@@ -451,10 +470,25 @@ ggplot(rel_plane_delay) +
 ``` r
 ## ahh scary this is awful
 ggplot(rel_plane_delay) +
-  geom_boxplot(mapping = aes(x = Manufactured_year, y = total_delay, group=total_delay ))
+  geom_boxplot(mapping = aes(x = Manufactured_year, y = arr_delay, group=arr_delay ))
 ```
 
-    ## Warning: Removed 5011 rows containing missing values or values outside the scale range
-    ## (`stat_boxplot()`).
-
 ![](Lesson12_files/figure-gfm/unnamed-chunk-15-3.png)<!-- -->
+
+``` r
+### CaRl Q: How would you summarize the total delay of each plane by age:
+
+# to make age, take year minus year of plane
+# Carl's code sorta:
+#new_flights <- flights %>% select(-year) %>% left_join(key, c("origin" = "faa")) %>% 
+ #mutate(age_of_plane = 2013 -year)
+ 
+#new_flights_sumd <- new_fligts %>% group_by(tailnum, age_of_plane) %>% 
+  # summarise(tot_arr_delay = sum(arr_delay))
+
+# sumd_arr_del <- summarize(rel_plane_delay, by = "arr_delay")
+```
+
+### Answer: no, it depends. We don’t have enough information on what causes the delays. It could be a result of the plane and its age, but it could also be a plethora of other factors. The point plot shows more modern planes are used more often, which makes sense. But reasoning data is not available. All planes have lots of delays. I would like to plot the data differently and do some statistical tests, but in this current moment I do not know how and would like to move on. Data is too variable.
+
+### Carl suggests not combining the arrival and departure delays because they are two different types of information, and arrival delay should absorb the departure delay time.

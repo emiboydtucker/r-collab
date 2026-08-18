@@ -1,0 +1,25 @@
+---
+title: "Lesson 13"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load libs
+```{r}
+library(tidyverse)
+library(maps)
+```
+
+import data
+```{r}
+lotr_tidy <- read_csv("https://raw.githubusercontent.com/jennybc/lotr-tidy/master/data/lotr_tidy.csv")
+```
+
+# Advice from lesson 13:
+### "read_csv() uses the first line of the data for the column names, which is a very common convention. We can play around with tweaking our local copy of the data file to make use of the options for tweaking this behavior. For example, if there are a few lines of metadata at the top of the file, we can use skip = n to skip the first n lines; or use comment = "#" to drop all lines that start with (e.g.) #. When the data do not have column names, we can use col_names = FALSE to tell read_csv() not to treat the first row as headings, and instead label them sequentially from X1 to Xn."
+
+# More advice:
+###   https://nt246.github.io/NTRES6940-data-science/lesson13-data-import-and-types.html 
