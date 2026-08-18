@@ -17,7 +17,9 @@ Today, we'll be using a subset of the [Gapminder dataset](https://www.gapminder.
 INSERT THE IMAGE FOUND AT THIS URL: https://s3-eu-west-1.amazonaws.com/static.gapminder.org/GapminderMedia/wp-uploads/20180914115336/Screen-Shot-2018-09-14-at-12.51.17-1024x557.png
 
 ![image](https://s3-eu-west-1.amazonaws.com/static.gapminder.org/GapminderMedia/wp-uploads/20180914115336/Screen-Shot-2018-09-14-at-12.51.17-1024x557.png)
+# I uploaded the image!
 
+# making changes that I want in my repo
 
 
 <br>
